@@ -10,6 +10,8 @@ int mainloop(SDL_Renderer* renderer){
     struct Object** all_objects = (struct Object**)malloc(sizeof(struct Object*) * n_objects);
     all_objects[0] = NewObject(400., 300., 30);
 
+    double dt = 0.1;
+
     while (running){
         while (SDL_PollEvent(&event)){
             if (event.type == SDL_QUIT){
@@ -17,7 +19,13 @@ int mainloop(SDL_Renderer* renderer){
             }
         }
 
+//update
+        for (int i=0; i<n_objects; i++){
+            UpdateObject(all_objects[i], dt);
+        }
 
+
+//render
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);

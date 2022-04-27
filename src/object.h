@@ -5,6 +5,9 @@ struct Object{
     int radius;
 };
 
+void UpdateObject(struct Object* object, double dt);
+void UpdateObjectPosition(struct Object* object, double dt);
+void Accelerate(struct Object* object, Vec2 acc);
 int RenderObject(SDL_Renderer* renderer, struct Object* object);
 struct Object* NewObject(double x, double y, int radius);
 void DestroyObject(struct Object* object);
