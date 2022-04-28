@@ -26,6 +26,17 @@ void Accelerate(struct Object* object, Vec2 acc){
     object->acceleration = Vec2AddVec2(object->acceleration, acc);
 }
 
+int CheckCollision(struct Object* object1, struct object2){
+    return dist(object1->pos, object2->pos) < object1->radius + object2->radius;
+}
+
+void CollideObjects(struct Object* object1, struct Object* object2){
+    if (CheckCollision(object1, object2)){
+        object1->pos = object1->old_pos;
+        object2->pos = object2->old_pos;
+    }
+}
+
 struct Object* NewObject(double x, double y, int radius){
     struct Object* o = (struct Object*)malloc(sizeof(struct Object));
     Vec2 p = {x, y};

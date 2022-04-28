@@ -6,11 +6,14 @@ int mainloop(SDL_Renderer* renderer){
     SDL_Event event;
     int running = 1;
 
+    int max_objects = 10;
     int n_objects = 1;
-    struct Object** all_objects = (struct Object**)malloc(sizeof(struct Object*) * n_objects);
+    struct Object** all_objects = (struct Object**)malloc(sizeof(struct Object*) * max_objects);
     all_objects[0] = NewObject(400., 300., 30);
 
     double dt = 0.1;
+
+    int mousex, mousey;
 
     while (running){
         while (SDL_PollEvent(&event)){
@@ -32,6 +35,13 @@ int mainloop(SDL_Renderer* renderer){
         for (int i=0; i<n_objects; i++){
             if (RenderObject(renderer, all_objects[i])){
                 SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, SDL_GetError());
+            }
+            else is (event.type == SDL_MOUSEBUTTONDOWN){
+                if (n_objects < max_objects){
+                    SDL_GetMouseState(&mousex, &mousey);
+                    n_objects ++;
+                    all_objects[n_objects] = NewObject((double)mousex, (double)mousey, 30);
+                }
             }
         }
         SDL_RenderPresent(renderer);
