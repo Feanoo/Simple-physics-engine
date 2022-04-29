@@ -2,8 +2,8 @@
 #include <SDL2/SDL_ttf.h>
 #include "engine.h"
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1200;
+const int SCREEN_HEIGHT = 900;
 const int SCREEN_BPP = 32;
 
 SDL_Window* screen = NULL;

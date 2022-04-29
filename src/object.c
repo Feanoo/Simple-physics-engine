@@ -1,5 +1,6 @@
 #include "circle.h"
 #include "object.h"
+#include "link.h"
 
 #define GRAVITY NewVec2(0.0, 1.0)
 
@@ -46,22 +47,29 @@ void CollideObjects(struct Object* object1, struct Object* object2){
         // printf("okay\n");
         Vec2 n = Vec2MultScalar(Vec2SubVec2(object1->pos, object2->pos), 1/d);
         // printf("%f, %f, %f\n", d, n.x, n.y);
-        object1->pos = Vec2AddVec2(object1->pos, Vec2MultScalar(n, (object2->radius + object1->radius - d)/2));
-        object2->pos = Vec2SubVec2(object2->pos, Vec2MultScalar(n, (object2->radius + object1->radius - d)/2));
+        if (object1->move){
+            object1->pos = Vec2AddVec2(object1->pos, Vec2MultScalar(n, (object2->radius + object1->radius - d)/2));
+        }
+        if (object2->move){
+            object2->pos = Vec2SubVec2(object2->pos, Vec2MultScalar(n, (object2->radius + object1->radius - d)/2));
+        }
         // printf("%f, %f\n", object1->pos.x, object1->pos.y);
     }
 }
 
-void UpdateAll(struct Object** all_objects, int n_objects, Vec2 center, int radius, double dt){
+void UpdateAll(struct Object** all_objects, struct Link** all_links, int n_objects, int n_links, Vec2 center, int radius, double dt){
+    ApplyLinks(all_links, n_links);
     for (int i=0; i<n_objects; i++){
         for (int j=i+1; j<n_objects; j++){
             CollideObjects(all_objects[i], all_objects[j]);
         }
-        UpdateObject(all_objects[i], center, radius, dt);
+        if (all_objects[i]->move){
+            UpdateObject(all_objects[i], center, radius, dt);
+        }
     }
 }
 
-struct Object* NewObject(double x, double y, int radius){
+struct Object* NewObject(double x, double y, int radius, int m){
     struct Object* o = (struct Object*)malloc(sizeof(struct Object));
     Vec2 p = {x, y};
     Vec2 op = {x, y};
@@ -71,6 +79,7 @@ struct Object* NewObject(double x, double y, int radius){
     o->old_pos = op;
     o->acceleration = a;
     o->radius = radius;
+    o->move = m;
 
     return o;
 }
