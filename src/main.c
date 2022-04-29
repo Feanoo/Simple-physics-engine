@@ -46,7 +46,7 @@ int main(){
     printf("done\n");
 
     printf("start !\n");
-    mainloop(renderer);
+    mainloop(screen, renderer);
 
     Quit();
     return 0;

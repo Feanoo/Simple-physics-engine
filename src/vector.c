@@ -21,6 +21,6 @@ Vec2 Vec2MultScalar(Vec2 a, double b){
     return c;
 }
 
-double dist(vec2 a, Vec2 b){
+double dist(Vec2 a, Vec2 b){
     return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 }

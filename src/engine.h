@@ -1,1 +1,1 @@
-int mainloop(SDL_Renderer* renderer);
+int mainloop(SDL_Window* window, SDL_Renderer* renderer);
