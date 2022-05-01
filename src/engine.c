@@ -8,6 +8,7 @@
 
 #define GRAVITY NewVec2(0.0, 1.0)
 
+// extern int* QUADTREE_MAX_OBJECTS;
 
 int mainloop(SDL_Window* window, SDL_Renderer* renderer){
     int width, height;
@@ -23,6 +24,12 @@ int mainloop(SDL_Window* window, SDL_Renderer* renderer){
     int n_links = 19;
     struct Object** all_objects = (struct Object**)malloc(sizeof(struct Object*) * max_objects);
     struct Link** all_links = (struct Link**)malloc(sizeof(struct Link*) * n_links);
+
+
+    QUADTREE_MAX_OBJECTS = (int*)malloc(sizeof(int));
+    *QUADTREE_MAX_OBJECTS = 5;
+    Vec2 a={0, 0}, b={width, height};
+    struct Quadtree* tree = NewQuadtree(a, b);
 
     all_objects[0] = NewObject(center.x - center.x/2, center.y, 10, 0);
     for (int i=1; i<n_objects; i++){
@@ -69,6 +76,7 @@ int mainloop(SDL_Window* window, SDL_Renderer* renderer){
             SDL_GetMouseState(&mousex, &mousey);
             // printf("%d\n", n_objects);
             all_objects[n_objects] = NewObject(mousex, mousey, 9, 1);
+            AddObjectToTree(all_objects[n_objects], tree);
             n_objects ++;
             T = t;
         }
@@ -94,6 +102,10 @@ int mainloop(SDL_Window* window, SDL_Renderer* renderer){
                 SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, SDL_GetError());
             }
         }
+
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        DrawQuadtree(renderer, tree);
+
         SDL_RenderPresent(renderer);
     }
 

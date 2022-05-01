@@ -12,8 +12,11 @@ $(BINPATH)/engine: $(BINPATH)/main.o
 $(BINPATH)/main.o: $(SRCPATH)/main.* $(BINPATH)/engine.o
 	$(CC) -c ${CFLAGS} $(SRCPATH)/main.c -o $(BINPATH)/main.o
 
-$(BINPATH)/engine.o: $(SRCPATH)/engine.* $(BINPATH)/object.o $(BINPATH)/time.o
+$(BINPATH)/engine.o: $(SRCPATH)/engine.* $(BINPATH)/object.o $(BINPATH)/time.o $(BINPATH)/quadtree.o
 	$(CC) -c ${CFLAGS} $(SRCPATH)/engine.c -o $(BINPATH)/engine.o
+
+$(BINPATH)/quadtree.o: $(SRCPATH)/quadtree.*
+	$(CC) -c ${CFLAGS} $(SRCPATH)/quadtree.c -o $(BINPATH)/quadtree.o
 
 $(BINPATH)/object.o: $(SRCPATH)/object.* $(BINPATH)/vector.o $(BINPATH)/circle.o $(BINPATH)/link.o
 	$(CC) -c ${CFLAGS} $(SRCPATH)/object.c -o $(BINPATH)/object.o
@@ -29,6 +32,7 @@ $(BINPATH)/link.o: $(SRCPATH)/link.*
 
 $(BINPATH)/time.o: $(SRCPATH)/time.*
 	$(CC) -c ${CFLAGS} $(SRCPATH)/time.c -o $(BINPATH)/time.o
+
 
 clean:
 	rm -f $(BINPATH)/*.*

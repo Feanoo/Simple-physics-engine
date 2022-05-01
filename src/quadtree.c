@@ -1,6 +1,9 @@
 #include "quadtree.h"
+#include "vector.h"
+#include "object.h"
+#include <SDL2/SDL.h>
 
-extern int QUADTREE_MAX_OBJECTS;
+int* QUADTREE_MAX_OBJECTS;
 
 void partition(struct Quadtree* tree){
     Vec2 size = Vec2MultScalar(tree->size, 0.5);
@@ -25,7 +28,7 @@ void partition(struct Quadtree* tree){
     }
     AddObjectToTree(tree->objects[n], tree->childs[n]);
 
-    for (int i=tree->n_objects; i<QUADTREE_MAX_OBJECTS; i++){
+    for (int i=tree->n_objects; i<*QUADTREE_MAX_OBJECTS; i++){
         tree->objects[i] = NULL;
     }
 
@@ -65,7 +68,7 @@ int intersect(struct Object* object, struct Quadtree* tree){ //stolen from https
 }
 
 void AddObjectToTree(struct Object* object, struct Quadtree* tree){
-    if (tree->n_objects == QUADTREE_MAX_OBJECTS){
+    if (tree->n_objects == *QUADTREE_MAX_OBJECTS){
         partition(tree);
     }
 
@@ -91,6 +94,29 @@ void AddObjectToTree(struct Object* object, struct Quadtree* tree){
     }
 }
 
+int DrawQuadtree(SDL_Renderer* renderer, struct Quadtree* tree){
+    SDL_Rect rect;
+    if (tree->childs[0] == NULL){
+        rect.x = tree->topleft.x;
+        rect.y = tree->topleft.y;
+        rect.w = tree->size.x;
+        rect.h = tree->size.y;
+        if (SDL_RenderDrawRect(renderer, &rect)){
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, SDL_GetError());
+            return -1;
+        }
+    }
+    else{
+        for (int i=0; i<4; i++){
+            if (DrawQuadtree(renderer, tree->childs[i])){
+                return -1;
+            }
+        }
+    }
+
+    return 0;
+}
+
 struct Quadtree* NewQuadtree(Vec2 topleft, Vec2 size){
     struct Quadtree* tree = (struct Quadtree*)malloc(sizeof(struct Quadtree));
 
@@ -98,7 +124,13 @@ struct Quadtree* NewQuadtree(Vec2 topleft, Vec2 size){
     tree->size = size;
     tree->childs[0] = NULL;
     tree->n_objects = 0;
-    tree->objects = (struct Object*)malloc(sizeof(struct Object) * QUADTREE_MAX_OBJECTS);
+
+    // printf("%ls\n", QUADTREE_MAX_OBJECTS);
+    // printf("%lu\n", (long unsigned int)(*QUADTREE_MAX_OBJECTS));
+    // printf("%lu\n", sizeof(struct Object*));
+    // printf("%lu\n", sizeof(struct Object*) * (long unsigned int)(*QUADTREE_MAX_OBJECTS));
+
+    tree->objects = (struct Object**)malloc(sizeof(struct Object*) * (*QUADTREE_MAX_OBJECTS));
 
     return tree;
 }
