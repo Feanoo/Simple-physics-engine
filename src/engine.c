@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <stdlib.h>
+#include <time.h>
 #include "engine.h"
 #include "object.h"
 #include "circle.h"
@@ -6,6 +8,8 @@
 #include "time.h"
 
 int mainloop(SDL_Window* window, SDL_Renderer* renderer){
+    srand(time(NULL));
+
     int width, height;
     SDL_GetWindowSize(window, &width, &height);
 
@@ -15,23 +19,28 @@ int mainloop(SDL_Window* window, SDL_Renderer* renderer){
     Vec2 center = {(double)width/2., (double)height/2.};
 
     int max_objects = 2500;
-    int n_objects = 20;
-    int n_links = 19;
+    int n_objects = 10;
+    int n_links = 0;
     struct Object** all_objects = (struct Object**)malloc(sizeof(struct Object*) * max_objects);
     struct Link** all_links = (struct Link**)malloc(sizeof(struct Link*) * n_links);
 
-    all_objects[0] = NewObject(center.x - center.x/2, center.y, 10, 0);
-    for (int i=1; i<n_objects; i++){
-        all_objects[i] = NewObject((center.x - center.x/2) + 30*i, center.y, 10, 1);
-    }
-    all_objects[n_objects-1]->move = 0;
 
-    for (int i=0; i<n_links; i++){
-        all_links[i] = NewLink(all_objects[i], all_objects[i+1]);
-        // printf("%f, %f, %f, %f\n", all_objects[i]->pos.x, all_objects[i]->pos.y, all_objects[i+1]->pos.x, all_objects[i+1]->pos.y);
+    for (int i=0; i<n_objects; i++){
+        all_objects[i] = NewObject(center.x + rand()%(int)center.x - (center.x/2), center.y + rand()%(int)center.y - (center.y/2), rand()%20 + 10, rand()%990 + 10, 1);
     }
 
-    double dt = 0.5;
+    // all_objects[0] = NewObject(center.x - center.x/2, center.y, 10, 1, 0);
+    // for (int i=1; i<n_objects; i++){
+    //     all_objects[i] = NewObject((center.x - center.x/2) + 30*i, center.y, 10, 1, 1);
+    // }
+    // all_objects[n_objects-1]->state = 0;
+
+    // for (int i=0; i<n_links; i++){
+    //     all_links[i] = NewLink(all_objects[i], all_objects[i+1]);
+    //     // printf("%f, %f, %f, %f\n", all_objects[i]->pos.x, all_objects[i]->pos.y, all_objects[i+1]->pos.x, all_objects[i+1]->pos.y);
+    // }
+
+    double dt = 0.01;
 
     int n_subsetps = 5;
 
@@ -64,7 +73,7 @@ int mainloop(SDL_Window* window, SDL_Renderer* renderer){
         if ((t-T > period) && create && n_objects < max_objects){
             SDL_GetMouseState(&mousex, &mousey);
             // printf("%d\n", n_objects);
-            all_objects[n_objects] = NewObject(mousex, mousey, 9, 1);
+            all_objects[n_objects] = NewObject(mousex, mousey, 9, 10, 1);
             n_objects ++;
             T = t;
         }

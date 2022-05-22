@@ -12,8 +12,8 @@ void ApplyLink(struct Link* l){
     Vec2 axis = Vec2SubVec2(object1->pos, object2->pos);
     Vec2 n = Vec2MultScalar(axis, 1/d);
     // printf("%f, %f, %f\n", d, n.x, n.y);
-    if (object1->move){
-        if (object2->move){
+    if (object1->state & 1){
+        if (object2->state & 1){
             object1->pos = Vec2AddVec2(object1->pos, Vec2MultScalar(n, (l->len - d)/2));
             object2->pos = Vec2SubVec2(object2->pos, Vec2MultScalar(n, (l->len - d)/2));
         }
@@ -22,7 +22,7 @@ void ApplyLink(struct Link* l){
         }
     }
     else{
-        if (object2->move){
+        if (object2->state & 1){
             object2->pos = Vec2SubVec2(object2->pos, Vec2MultScalar(n, (l->len - d)/2));
         }
     }
