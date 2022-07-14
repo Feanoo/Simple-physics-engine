@@ -4,7 +4,10 @@ LD=-lSDL2 -lSDL2main -lSDL2_ttf -lSDL2_image -lm
 BINPATH=bin
 SRCPATH=src
 
-build: $(BINPATH)/engine
+build: $(BINPATH) $(BINPATH)/engine
+
+$(BINPATH):
+	mkdir $(BINPATH)
 
 $(BINPATH)/engine: $(BINPATH)/main.o 
 	$(CC) $(BINPATH)/*.o -o $(BINPATH)/engine ${LD}
@@ -31,4 +34,4 @@ $(BINPATH)/time.o: $(SRCPATH)/time.*
 	$(CC) -c ${CFLAGS} $(SRCPATH)/time.c -o $(BINPATH)/time.o
 
 clean:
-	rm -f $(BINPATH)/*
+	rm -r $(BINPATH)
