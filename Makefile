@@ -31,4 +31,4 @@ $(BINPATH)/time.o: $(SRCPATH)/time.*
 	$(CC) -c ${CFLAGS} $(SRCPATH)/time.c -o $(BINPATH)/time.o
 
 clean:
-	rm -f $(BINPATH)/*.*
+	rm -f $(BINPATH)/*
